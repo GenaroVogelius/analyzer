@@ -1,0 +1,42 @@
+FROM python:3.13-slim
+
+# Set environment variables
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONPATH=/workspace
+ENV LANG=en_US.UTF-8
+ENV LANGUAGE=en_US:en
+ENV LC_ALL=en_US.UTF-8
+
+# Create workspace directory
+WORKDIR /workspace
+
+# Install system dependencies, create user, install uv, copy files
+RUN apt-get update && apt-get install -y \
+    git \
+    curl \
+    gcc \
+    build-essential \
+    locales \
+    && rm -rf /var/lib/apt/lists/* \
+    && sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen \
+    && locale-gen \
+    && useradd -ms /bin/bash vscode \
+    && curl -LsSf https://astral.sh/uv/install.sh | sh -s -- --no-modify-path \
+    && mv /root/.local/bin/uv /usr/local/bin/ \
+    && chown vscode:vscode /usr/local/bin/uv
+
+# Copy project files
+COPY . /workspace/
+
+# Install the package and all dependencies in development mode
+RUN chown -R vscode:vscode /workspace && \
+    uv pip install --system -e .
+
+
+# Configure Git to trust the workspace directory as vscode user
+RUN git config --global --add safe.directory /workspace
+
+
+USER vscode
+# Expose port
+EXPOSE 8000

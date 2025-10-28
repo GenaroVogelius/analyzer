@@ -1,0 +1,51 @@
+# Python virtual environments
+.venv/
+venv/
+ENV/
+
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Git
+.git/
+.gitignore
+
+# Environment variables
+.env
+.env.*
+.env.local
+.env.production
+
+# Logs
+*.log
+logs/
+app.log/
+
+# Development files
+.devcontainer/
+scripts/
+README.md
+
+# Test files
+tests/
+*_test.py
+test_*.py
+
+# Documentation
+docs/
+*.md 

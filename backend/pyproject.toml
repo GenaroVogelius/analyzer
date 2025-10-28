@@ -1,0 +1,65 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "backend"
+version = "0.1"
+description = "backend"
+requires-python = ">=3.13"
+dependencies = [
+    "aiohttp>=3.12.13",
+    "fastapi==0.115.12",
+    "uvicorn==0.34.3",
+    "python-dotenv==1.1.0",
+    "pydantic>=2.11.7",
+    "pydantic-settings>=2.9.1",
+    "httpx==0.28.1",
+    "pytest>=8.4.0",
+    "pytest-asyncio>=0.24.0",
+    "pytest-cov>=6.0.0",
+    "requests-mock>=1.12.0",
+    "slowapi>=0.1.9",
+    "pandas>=2.3.3",
+    "types-requests>=2.32.4.20250913",
+    "tortoise-orm[asyncpg]>=0.25.1",
+    "aerich>=0.9.1",
+    "python-multipart>=0.0.20",
+]
+
+[tool.setuptools.packages.find]
+include = ["app*"]
+
+[tool.mypy]
+ignore_missing_imports = true
+mypy_path = ["app/infrastructure/stubs"]
+
+[tool.pytest.ini_options]
+testpaths = ["app"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = [
+    "-v",
+    "--tb=short",
+    "--strict-markers",
+    "--disable-warnings",
+    "--color=yes"
+]
+markers = [
+    "integration: marks tests as integration tests (require running server)",
+    "slow: marks tests as slow running",
+    "auth: marks tests related to authentication",
+    "rate_limit: marks tests related to rate limiting"
+]
+asyncio_mode = "auto"
+
+
+[tool.aerich]
+
+tortoise_orm = "app.infrastructure.db.postgresql.tortoise_config.TORTOISE_ORM"
+
+location = "./app/infrastructure/db/postgresql/migrations"
+
+src_folder = "./."
+

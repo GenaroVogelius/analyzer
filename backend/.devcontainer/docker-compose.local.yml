@@ -1,0 +1,56 @@
+# docker-compose -f .devcontainer/docker-compose.local.yml up -d --no-recreate
+
+services:
+  app:
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile.local
+    container_name: backend-api
+    depends_on:
+      - postgres
+    ports:
+      - "8000:8000"
+    env_file:
+      - devcontainer.env
+    environment:
+      - PYTHONPATH=/workspace
+      - POSTGRESQL_URL=postgres://admin:password123@postgres:5432/postgresql-backend
+      - DEBUG=true
+      - SECRET_KEY=${SECRET_KEY:-your-secret-key-change-this-in-production}
+      - PYTHONDONTWRITEBYTECODE=1
+      - PYTHONUNBUFFERED=1
+      - LANG=en_US.UTF-8
+      - LANGUAGE=en_US:en
+      - LC_ALL=en_US.UTF-8
+    volumes:
+      - ..:/workspace
+    networks:
+      - api-backend-network
+    user: vscode
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload --reload-dir app
+
+  # PostgreSQL Database
+  postgres:
+    image: postgres:17
+    container_name: postgresql-backend
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=password123
+      - POSTGRES_DB=postgresql-backend
+    volumes:
+      - ./postgresql_data:/var/lib/postgresql/data
+    networks:
+      - api-backend-network
+    restart: unless-stopped
+
+volumes:
+  postgresql_data:
+    driver: local
+  mongodb_data:
+    driver: local
+
+networks:
+  api-backend-network:
+    driver: bridge
