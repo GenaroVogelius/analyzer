@@ -29,9 +29,12 @@ CREATE TABLE IF NOT EXISTS "operations" (
     "amount" INT,
     "code" VARCHAR(50) NOT NULL,
     "accumulated" DOUBLE PRECISION NOT NULL,
+    "import_of_operation" DOUBLE PRECISION,
+    "price_of_operation" DOUBLE PRECISION,
     "number_receipt" INT NOT NULL,
-    "date_liquidation" TIMESTAMPTZ NOT NULL,
-    "date_operation" TIMESTAMPTZ NOT NULL,
+    "comprobant_of_operation" INT,
+    "date_liquidation" DATE NOT NULL,
+    "date_operation" DATE NOT NULL,
     "reference_id" INT NOT NULL REFERENCES "references" ("id") ON DELETE CASCADE,
     "ticket_id" INT NOT NULL REFERENCES "tickets" ("id") ON DELETE CASCADE,
     "type_operation_id" INT NOT NULL REFERENCES "operation_types" ("id") ON DELETE CASCADE
@@ -40,7 +43,10 @@ COMMENT ON COLUMN "operations"."id" IS 'NUME from dataset';
 COMMENT ON COLUMN "operations"."amount" IS 'CANT from dataset';
 COMMENT ON COLUMN "operations"."code" IS 'CLAV from dataset';
 COMMENT ON COLUMN "operations"."accumulated" IS 'ACUM from dataset';
+COMMENT ON COLUMN "operations"."import_of_operation" IS 'IMPO of operation from dataset';
+COMMENT ON COLUMN "operations"."price_of_operation" IS 'PCIO of operation from dataset';
 COMMENT ON COLUMN "operations"."number_receipt" IS 'NroComprobante from dataset';
+COMMENT ON COLUMN "operations"."comprobant_of_operation" IS 'Comprobante of operation from dataset';
 COMMENT ON COLUMN "operations"."date_liquidation" IS 'FEC1 from dataset';
 COMMENT ON COLUMN "operations"."date_operation" IS 'FEC2 from dataset';
 COMMENT ON COLUMN "operations"."reference_id" IS 'DETA from dataset';
@@ -60,27 +66,27 @@ async def downgrade(db: BaseDBAsyncClient) -> str:
 
 
 MODELS_STATE = (
-    "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"
+    "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"
 )
