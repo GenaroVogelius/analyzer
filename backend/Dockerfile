@@ -7,6 +7,7 @@ RUN apt-get update && apt-get install -y \
     curl \
     gcc \
     build-essential \
+    postgresql-client \
     && rm -rf /var/lib/apt/lists/*
 
 # Install uv
@@ -23,6 +24,10 @@ RUN uv sync --frozen --no-dev
 
 # Copy application code
 COPY . .
+
+# Copy and make the wait script executable
+COPY wait-for-db.sh /workspace/wait-for-db.sh
+RUN chmod +x /workspace/wait-for-db.sh
 
 # Set Python path
 ENV PYTHONPATH=/workspace
@@ -41,6 +46,5 @@ USER appuser
 # Expose port
 EXPOSE 8000
 
-
-# Run the application
-CMD ["uv", "run", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"] 
+# Run the wait script that handles database readiness and migrations
+CMD ["/workspace/wait-for-db.sh"] 
