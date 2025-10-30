@@ -22,6 +22,20 @@ The backend uses:
 - PostgreSQL database for data persistence
 - Tortoise ORM with Aerich for database migrations
 
+### Database models (Mermaid)
+
+```mermaid
+graph TD
+  Ticket[TicketModel]
+  OperationType[OperationTypeModel]
+  Reference[ReferenceModel]
+  Operation[OperationModel]
+
+  Operation -- "type_operation (N:1, CASCADE)" --> OperationType
+  Operation -- "ticket (N:1, CASCADE)" --> Ticket
+  Operation -- "reference (N:1, CASCADE)" --> Reference
+```
+
 ### Frontend
 
 The frontend is built with **React** and modern web technologies:
