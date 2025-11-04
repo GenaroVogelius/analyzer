@@ -24,6 +24,8 @@ services:
       - LC_ALL=en_US.UTF-8
     volumes:
       - ..:/workspace
+      # Cache compartido: los paquetes descargados se reutilizan entre Windows y Linux
+      - ${LOCALAPPDATA}/uv/cache:/home/vscode/.cache/uv:rw
     networks:
       - api-backend-network
     user: vscode

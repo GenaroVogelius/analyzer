@@ -28,6 +28,8 @@ runner
 # Virtual Environment
 venv/
 ENV/
+.venv/
+.venv-linux/
 
 # IDE
 .idea/
