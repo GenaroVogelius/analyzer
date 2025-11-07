@@ -125,3 +125,21 @@ This application consists of two components that need to be running simultaneous
 ### Dataset
 
 A sample historical portfolio dataset is available at `dataset/historical_portfolio.csv`.
+
+### Model Context Protocol
+
+A MCP server is added, this is an example of how to connect if you are using cursor IDE:
+
+1) Go to Open Settings(Ctrl+Shift+J)
+2) Go to tools an mcp
+3) Click on New MCP server
+4) Add the following 
+   ```json
+      "Analyzer MCP": 
+      {
+         "url": "http://localhost:8000/mcp"
+      }
+   ```
+5) Turn on the MCP and now your agent will have new tools to get more context and better answers about the information that the tables have, try asking about which tools has access and then try doing some questions.
+
+The agent will act as a model context procotol client, because the server will be located at localhost:8000/mcp which has a HTTP streming connection very important in production environments
